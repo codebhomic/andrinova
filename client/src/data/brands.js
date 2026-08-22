@@ -1,0 +1,20 @@
+export const featuredBrands = [
+  "WeAct Studio",
+  "RunCam",
+  "VEGA Processor",
+  "Taparia",
+  "DWIN",
+  "FLIR",
+  "M5STACK",
+  "PIMORONI",
+  "Kamoer",
+  "Arducam",
+  "Realtek",
+  "WOER",
+  "ALTERA",
+  "HTRC",
+  "DOBOT",
+  "Extech",
+  "NEXTION",
+  "SanDisk"
+];
