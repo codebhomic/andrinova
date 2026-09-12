@@ -12,6 +12,7 @@ import LoginPage from './pages/LoginPage';
 import CareersPage from './pages/CareersPage';
 import ComparePage from './pages/ComparePage';
 import SellerFormPage from './pages/SellerFormPage';
+import CheckoutPage from './pages/CheckoutPage';
 
 export default function App() {
   const [currentPage, setCurrentPage] = useState('home');
@@ -45,6 +46,8 @@ export default function App() {
       {/* Login Routes */}
       {currentPage === 'bom-tool' && <LoginPage onNavigate={handleNavigate} activeNav="bom-tool" />}
       {currentPage === 'login' && <LoginPage onNavigate={handleNavigate} activeNav="" />}
+      {currentPage === 'checkout' && <CheckoutPage onNavigate={handleNavigate} activeNav="" />}
+      {/* {currentPage === 'checkout' && <Route path="/checkout" element={<CheckoutPage />} />} */}
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useEffect, useState } from "react";
 import TopBar from '../components/layout/TopBar';
 import Header from '../components/layout/Header';
 import Navbar from '../components/layout/Navbar';
@@ -29,6 +29,45 @@ const sampleNewProducts = [
 ];
 
 export default function NewArrivalsPage({ onNavigate }) {
+
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [cartProduct, setCartProduct] = useState(null);
+
+  const addToCart = (product) => {
+    const cartItem = {
+      product_id: product.id,
+      quantity: 1,
+      product: product,
+    };
+
+    localStorage.setItem(
+      "andrinova_cart",
+      JSON.stringify(cartItem)
+    );
+
+    onNavigate && onNavigate("checkout");
+  };
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await fetch("http://127.0.0.1:5000/api/products");
+
+        const data = await response.json();
+
+        if (data.success) {
+          setProducts(data.products);
+        }
+      } catch (error) {
+        console.error("Failed to fetch products:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, []);
   const [selectedSort, setSelectedSort] = useState('latest');
 
   return (
@@ -57,17 +96,17 @@ export default function NewArrivalsPage({ onNavigate }) {
         <main className="max-w-350 mx-auto px-4 md:px-12 py-6">
           {/* 1. Breadcrumbs */}
           <div className="flex items-center gap-1.5 text-xs text-gray-500 font-medium mb-6">
-            <button 
+            <button
               type="button"
-              onClick={() => onNavigate && onNavigate('home')} 
+              onClick={() => onNavigate && onNavigate('home')}
               className="hover:text-purple-700 cursor-pointer"
             >
               Home
             </button>
             <span>→</span>
-            <button 
+            <button
               type="button"
-              onClick={() => onNavigate && onNavigate('shop')} 
+              onClick={() => onNavigate && onNavigate('shop')}
               className="hover:text-purple-700 cursor-pointer"
             >
               Shop
@@ -148,49 +187,81 @@ export default function NewArrivalsPage({ onNavigate }) {
 
           {/* 4. Products Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 pt-6">
-            {sampleNewProducts.map((product) => (
+
+            {products.map((product) => (
+
               <div
                 key={product.id}
                 className="border border-gray-200/90 rounded-2xl p-4 bg-white hover:shadow-md transition-shadow flex flex-col justify-between group"
               >
-                {/* Product Image Placeholder */}
+
+                {/* Product Image */}
                 <div className="relative bg-gray-50 rounded-xl h-44 flex items-center justify-center mb-4 overflow-hidden">
-                  <span className="text-5xl group-hover:scale-110 transition-transform">⚙️</span>
-                  <span className="absolute top-2.5 left-2.5 bg-orange-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
-                    {product.tag}
-                  </span>
+
+                  {product.image ? (
+                    <img
+                      src={product.image}
+                      alt={product.name}
+                      className="h-full w-full object-contain"
+                    />
+                  ) : (
+                    <span className="text-5xl group-hover:scale-110 transition-transform">
+                      ⚙️
+                    </span>
+                  )}
+
                 </div>
 
                 {/* Info */}
                 <div>
-                  <div className="text-amber-400 text-xs mb-1">
-                    {'★'.repeat(product.rating)}
-                  </div>
+
                   <h4 className="text-xs font-bold text-gray-900 group-hover:text-purple-900 transition-colors line-clamp-2 mb-2">
-                    {product.title}
+                    {product.name}
                   </h4>
+
+                  <p className="text-xs text-gray-500">
+                    {product.stock > 0 ? "In Stock" : "Out of Stock"}
+                  </p>
+
                 </div>
 
-                {/* Price & Add to Cart */}
+                {/* Price + Cart */}
                 <div className="pt-3 border-t border-gray-100 flex items-center justify-between mt-2">
+
                   <div>
-                    <span className="text-sm font-black text-[#2D0B6B]">{product.price}</span>
-                    <span className="text-[11px] text-gray-400 line-through ml-1.5">{product.oldPrice}</span>
+                    <span className="text-sm font-black text-[#2D0B6B]">
+                      ₹{product.price}
+                    </span>
                   </div>
 
                   <button
                     type="button"
-                    onClick={() => onNavigate && onNavigate('login')}
-                    className="bg-[#2D0B6B] hover:bg-[#1f074a] text-white p-2 rounded-lg transition-colors cursor-pointer shadow-xs"
+                    disabled={product.stock <= 0}
+                    onClick={() => addToCart(product)}
+                    className="bg-[#2D0B6B] hover:bg-[#1f074a] disabled:bg-gray-400 text-white p-2 rounded-lg transition-colors cursor-pointer shadow-xs"
                     title="Add to Cart"
                   >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
+                    <svg
+                      className="w-4 h-4"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
+                      />
                     </svg>
                   </button>
+
                 </div>
+
               </div>
+
             ))}
+
           </div>
         </main>
       </div>

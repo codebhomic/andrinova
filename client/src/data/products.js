@@ -10,7 +10,7 @@ export const featuredProducts = [
   },
   {
     id: 2,
-    title: "EBYTE ECB31-P4T13SA2ME8...",
+    title: "kjhkhkjEBYTE ECB31-P4T13SA2ME8...",
     sku: "R265534",
     price: "1799.00",
     icon: "💻",
