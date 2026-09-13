@@ -6,7 +6,7 @@ import Footer from '../components/layout/Footer';
 
 const CheckoutPage = ({ onNavigate }) => {
     const [loading, setLoading] = useState(false);
-    const RAZORPAY_KEY_ID = "rzp_test_Tb0zEIpqqQWjQn";
+    const RAZORPAY_KEY_ID = "rzp_test_TbOpd9HOo1qQaX";
 
     const loadRazorpay = () => {
         return new Promise((resolve) => {
